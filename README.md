@@ -5,9 +5,11 @@
 
 - 参考 [LockstepDemo](https://github.com/AlbertGithubHome/LockstepDemo) 实现
 - 默认需要两个客户端加入，如果要修改最大人数，修改 `frame-sync-server/server.py` 文件中的 `g_max_player` 值
-- 默认25帧，如需改变要修改前后端代码：
+- 默认25帧，如需改变要修改前后端代码
   - 前端修改 `Assets/DelayedSpawner.cs` 文件中的的 `g_interval` 值（每帧毫秒数）
   - 后端修改 `frame-sync-server/server.py` 文件中的 `g_interval` 值（每帧毫秒数）
+- Unity版本为 `2021.2.61c1 LTS` 版本，`2D (Built-In Render Pipeline)` 工程
+- Python版本 `3.7.6`
 
 ## 如何运行
 
@@ -19,7 +21,9 @@ $ python3 server.py
 
 - 客户端
 
+```
 打开工程直接调试运行，或者Build一个Windows平台的exe运行
+```
 
 ## 示例截图
 
