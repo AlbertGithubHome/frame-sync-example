@@ -14,12 +14,6 @@ public class SquareRoleController : MonoBehaviour
 
     private List<string> names = new List<string> { "Alpha", "Bravo", "Charlie", "Delta", "Echo" }; // 可用的名字列表
 
-    void Start()
-    {
-        //RandomName();
-        //RandomColor();
-    }
-
     public void RandomName()
     {
         // 随机设置名字

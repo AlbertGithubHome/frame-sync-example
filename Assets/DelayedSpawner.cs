@@ -56,10 +56,8 @@ public class DelayedSpawner : MonoBehaviour
         // 启动 WebSocket 客户端
         await SetupWebSocket();
 
-        // 延迟创建方块物体和名字标签
-        StartCoroutine(SpawnAfterDelay(2f));
-
-
+        // 延迟通知服务器进入
+        StartCoroutine(EnterAfterDelay(2f));
     }
 
     private void Spawn(string name)
@@ -87,29 +85,9 @@ public class DelayedSpawner : MonoBehaviour
         RoleList.Add(controller);
     }
 
-    private IEnumerator SpawnAfterDelay(float delay)
+    private IEnumerator EnterAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-
-        //// 创建方块物体
-        //GameObject squareRole = Instantiate(squareRolePrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        //squareRole.name = "SquareRole";
-
-        //// 创建名字标签
-        //GameObject nameLabel = Instantiate(nameLabelPrefab);
-        ////nameLabel.transform.SetParent(GameObject.Find("Canvas").transform, false); // 确保UI文本在Canvas下
-        //nameLabel.transform.position = Camera.main.WorldToScreenPoint(squareRole.transform.position);
-        //FollowObject controller0 = nameLabel.GetComponent<FollowObject>();
-        //controller0.objectToFollow = squareRole.transform;
-
-        //// 配置方块物体和名字标签
-        //SquareRoleController controller = squareRole.GetComponent<SquareRoleController>();
-        //controller.squareRole = squareRole.transform;
-        //controller.nameLabel = nameLabel.transform.Find("NameLable").GetComponent<RectTransform>();
-        //controller.squareRenderer = squareRole.GetComponent<SpriteRenderer>();
-        //controller.nameText = nameLabel.transform.Find("NameLable").GetComponent<TextMeshProUGUI>(); // 使用TextMeshProUGUI
-        //controller.RandomName();
-        //controller.RandomColor();
 
         // 发送消息到 WebSocket 服务器
         if (isWebSocketConnected)
@@ -119,9 +97,6 @@ public class DelayedSpawner : MonoBehaviour
             Task sendMsgTask = SendMsg("enter&" + randomName);
             yield return new WaitUntil(() => sendMsgTask.IsCompleted);
             //await SendMsg("SquareRole created with a random name and color.");
-
-            //Spawn("1234");
-            //Spawn("5678");
         }
     }
 
@@ -134,7 +109,7 @@ public class DelayedSpawner : MonoBehaviour
         try
         {
             await _webSocket.ConnectAsync(serverUri, CancellationToken.None);
-            UnityEngine.Debug.Log("Connected to WebSocket server");
+            Debug.Log("Connected to WebSocket server");
             isWebSocketConnected = true;
 
             // 启动接收消息的任务
@@ -142,7 +117,7 @@ public class DelayedSpawner : MonoBehaviour
         }
         catch (Exception ex)
         {
-            UnityEngine.Debug.LogError("Error connecting to WebSocket server: " + ex.Message);
+            Debug.LogError("Error connecting to WebSocket server: " + ex.Message);
         }
     }
 
@@ -153,11 +128,11 @@ public class DelayedSpawner : MonoBehaviour
         {
             byte[] data = Encoding.UTF8.GetBytes(msg);
             await _webSocket.SendAsync(new ArraySegment<byte>(data), WebSocketMessageType.Text, true, CancellationToken.None);
-            UnityEngine.Debug.Log("Sent msg: " + msg);
+            Debug.Log("Sent msg: " + msg);
         }
         else
         {
-            UnityEngine.Debug.LogError("WebSocket is not connected");
+            Debug.LogError("WebSocket is not connected");
         }
     }
 
@@ -191,7 +166,7 @@ public class DelayedSpawner : MonoBehaviour
 
             commands.Add(list);
 
-            UnityEngine.Debug.Log("Received cmd: " + msg);
+            Debug.Log("Received cmd: " + msg);
         }
     }
 
@@ -239,7 +214,6 @@ public class DelayedSpawner : MonoBehaviour
     private void StepUpdate()
     {
         g_frame++;
-
     }
     private void UpdateM(long t)
     {
@@ -283,44 +257,38 @@ public class DelayedSpawner : MonoBehaviour
         }
     }
 
-    private void CheckKeyInput()
+    private async void CheckKeyInput()
     {
         long now = stopwatch.ElapsedMilliseconds;
         if (now - g_lastpress < 15)
             return;
-
-        g_lastpress = now;
+        else
+            g_lastpress = now;
 
         string key = "";
         // 检测按键
         if (Input.GetKey(KeyCode.UpArrow))
         {
             key = "UP";
-            Debug.Log("Up Arrow key pressed");
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             key = "DOWN";
-            Debug.Log("Down Arrow key pressed");
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             key = "LEFT";
-            Debug.Log("Left Arrow key pressed");
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             key = "RIGHT";
-            Debug.Log("Right Arrow key pressed");
         }
-
-        //Debug.Log("Update method called"); // 添加调试日志
 
         if (key.Length > 0)
         {
-            SendMsg("cmd&" + key);
-            //Task sendMsgTask = SendMsg("cmd&" + key);
-            //yield return new WaitUntil(() => sendMsgTask.IsCompleted);
+            Debug.Log(key + " Arrow key pressed");
+
+            await SendMsg("cmd&" + key);
         }
     }
 

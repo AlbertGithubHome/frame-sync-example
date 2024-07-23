@@ -3,7 +3,7 @@
 
 ## 说明
 
-- 参考 [LockstepDemo](https://github.com/AlbertGithubHome/LockstepDemo) 实现
+- 参考 [LockstepDemo](https://github.com/AlbertGithubHome/LockstepDemo) 实现，很粗糙但花费了1day的时间
 - 默认需要两个客户端加入，如果要修改最大人数，修改 `frame-sync-server/server.py` 文件中的 `g_max_player` 值
 - 默认25帧，如需改变要修改前后端代码
   - 前端修改 `Assets/DelayedSpawner.cs` 文件中的的 `g_interval` 值（每帧毫秒数）
