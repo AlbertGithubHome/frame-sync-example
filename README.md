@@ -8,7 +8,8 @@
 - 默认25帧，如需改变要修改前后端代码
   - 前端修改 `Assets/DelayedSpawner.cs` 文件中的的 `g_interval` 值（每帧毫秒数）
   - 后端修改 `frame-sync-server/server.py` 文件中的 `g_interval` 值（每帧毫秒数）
-- Unity版本为 `2021.2.61c1 LTS` 版本，`2D (Built-In Render Pipeline)` 工程
+- 后台运行勾选了 `Project Settings` -> `Player` -> `Resolution and Presentation` -> `Resolution` -> `Run In Background`
+- Unity版本为 `2021.3.6f1c1 LTS` 版本，`2D (Built-In Render Pipeline)` 工程
 - Python版本 `3.7.6`
 
 ## 如何运行
